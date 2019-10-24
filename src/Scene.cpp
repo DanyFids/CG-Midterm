@@ -34,20 +34,37 @@ void PlayScene::KeyboardInput(GLFWwindow* window, glm::vec2 mousePos, int player
 {
 	// PLAYER 1
 	glm::vec3 t = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 rotation = glm::vec3(0.0f);
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+		rotate = false;
+		t.x += glm::cos(glm::radians(players[PLAYER_1]->GetTransform().rotation.y));
+		t.y = 0.0f;
+		t.z -= glm::sin(glm::radians(players[PLAYER_1]->GetTransform().rotation.y));
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+		rotate = false;
+		t.x -= glm::cos(glm::radians(players[PLAYER_1]->GetTransform().rotation.y));
+		t.y = 0.0f;
+		t.z += glm::sin(glm::radians(players[PLAYER_1]->GetTransform().rotation.y));
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+		rotate = true;
+		rotation.y += 3 * PLAYER_SPEED * dt;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+		rotate = true;
+		rotation.y -= 3 * PLAYER_SPEED * dt;
 	}
 
 	if (t.x != 0.0f || t.y != 0.0f || t.z != 0.0f) {
+		if(!rotate)
+			players[PLAYER_1]->Move(t * PLAYER_SPEED * dt);
 	}
+	if (rotate)
+		players[PLAYER_1]->Rotate(rotation);
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && !p1_shoot) {
 		players[PLAYER_1]->Shoot(bullets);
@@ -59,16 +76,41 @@ void PlayScene::KeyboardInput(GLFWwindow* window, glm::vec2 mousePos, int player
 
 	// PLAYER 2
 	glm::vec3 m = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 rotation2 = glm::vec3(0.0f);
 	if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
+		rotate2 = false;
+		m.x += glm::cos(glm::radians(players[PLAYER_2]->GetTransform().rotation.y));
+		m.y = 0.0f;
+		m.z -= glm::sin(glm::radians(players[PLAYER_2]->GetTransform().rotation.y));
 	}
+
 	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
-	}
+		rotate2 = false;
+		m.x += glm::cos(glm::radians(players[PLAYER_2]->GetTransform().rotation.y));
+		m.y = 0.0f;
+		m.z -= glm::sin(glm::radians(players[PLAYER_2]->GetTransform().rotation.y));
+	}	
+
 	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
+		rotate2 = true;
+		rotation2.y += 3 * PLAYER_SPEED * dt;
 	}
+
 	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
+		rotate2 = true;
+		rotation2.y -= 3 * PLAYER_SPEED * dt;
 	}
+
 	if (m.x != 0.0f || m.y != 0.0f || m.z != 0.0f) {
+		if (!rotate2)
+			players[PLAYER_2]->Move(m * PLAYER_SPEED * dt);
 	}
+
+	if (rotate2) 
+		players[PLAYER_2]->Rotate(rotation2);
+
+	rotate = false;
+	rotate2 = false;
 
 	if (glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS && !p2_shoot) {
 		players[PLAYER_2]->Shoot(bullets);
@@ -77,7 +119,6 @@ void PlayScene::KeyboardInput(GLFWwindow* window, glm::vec2 mousePos, int player
 	if (glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_RELEASE) {
 		p2_shoot = false;
 	}
-		
 }
 
 void PlayScene::ControllerInput(unsigned int controller, int player, float dt)
