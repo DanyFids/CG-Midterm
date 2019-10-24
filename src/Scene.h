@@ -42,6 +42,8 @@ public:
 	virtual void Draw() = 0;
 	virtual void LoadScene() = 0;
 	virtual std::vector<Camera*> GetCams() { return Cam; }
+	bool rotate = false;
+	bool rotate2 = false;
 };
 
 class MenuItem {
