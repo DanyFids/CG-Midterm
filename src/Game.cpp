@@ -100,17 +100,9 @@ void Game::Initialize()
 	std::cout << glGetString(GL_RENDERER) << std::endl;
 	std::cout << glGetString(GL_VERSION) << std::endl;
 
-	OnePlayerScn = new OnePlayer();
-	TwoPlayerScn = new TwoPlayer();
+	GameScn = new GameScene();
 
-	if (glfwJoystickPresent(GLFW_JOYSTICK_1) && glfwJoystickIsGamepad(GLFW_JOYSTICK_1) && 
-		glfwJoystickPresent(GLFW_JOYSTICK_2) && glfwJoystickIsGamepad(GLFW_JOYSTICK_2)) {
-
-		curScene = TwoPlayerScn;
-	}
-	else {
-		curScene = OnePlayerScn;
-	}
+	curScene = GameScn;
 }
 
 void Game::Shutdown()
@@ -222,16 +214,6 @@ void Game::InputHandle(float dt)
 	}
 	if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_RELEASE)
 		w_pressed = false;
-	if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS && !f2_pressed) {
-		if (curScene == OnePlayerScn)
-			curScene = TwoPlayerScn;
-		else
-			curScene = OnePlayerScn;
-
-		f2_pressed = true;
-	}
-	if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_RELEASE)
-		f2_pressed = false;
 
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !space_pressed) {
 		curScene->GetCams()[0]->TogglePerspective();

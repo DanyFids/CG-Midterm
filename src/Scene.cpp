@@ -32,42 +32,36 @@ void MenuScene::InputHandle(GLFWwindow* window, glm::vec2 mousePos, float dt)
 
 void PlayScene::KeyboardInput(GLFWwindow* window, glm::vec2 mousePos, int player, float dt)
 {
-	float offsetX = ((float)mousePos.x - m_lastX) * MOUSE_SENSITIVITY;
-	float offsetY = (m_lastY - (float)mousePos.y) * MOUSE_SENSITIVITY;
-	m_lastX = (float)mousePos.x;
-	m_lastY = (float)mousePos.y;
-
-	if ((offsetX != 0.0f || offsetY != 0.0f) && !firstMouse) {
-		Cam[player]->Rotate(glm::vec2(offsetX, offsetY));
-	}
-	else if ((offsetX != 0.0f || offsetY != 0.0f) && firstMouse) {
-		firstMouse = false;
-	}
-
-	glm::vec3 m = glm::vec3(0.0f, 0.0f, 0.0f);
-
-	if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
-		m -= glm::vec3(0.0f, 0.0f, 1.0f);
-	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
-		m += glm::vec3(0.0f, 0.0f, 1.0f);
-	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
-		m -= glm::vec3(1.0f, 0.0f, 0.0f);
-	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
-		m += glm::vec3(1.0f, 0.0f, 0.0f);
-	if (m.x != 0.0f || m.y != 0.0f || m.z != 0.0f)
-		players[player]->Move(m * PLAYER_SPEED * dt);
-
+	// PLAYER 1
 	glm::vec3 t = glm::vec3(0.0f, 0.0f, 0.0f);
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		t += Cam[player]->GetDirection();
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		t -= Cam[player]->GetDirection();
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		t -= Cam[player]->GetRight();
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		t += Cam[player]->GetRight();
-	if (t.x != 0.0f || t.y != 0.0f || t.z != 0.0f)
-		Cam[player]->Move(glm::normalize(t), dt);
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+	}
+
+	if (t.x != 0.0f || t.y != 0.0f || t.z != 0.0f) {
+	}
+
+	// PLAYER 2
+	glm::vec3 m = glm::vec3(0.0f, 0.0f, 0.0f);
+	if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
+	}
+	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
+	}
+	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
+	}
+	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
+	}
+	if (m.x != 0.0f || m.y != 0.0f || m.z != 0.0f) {
+	}
+		
 }
 
 void PlayScene::ControllerInput(unsigned int controller, int player, float dt)

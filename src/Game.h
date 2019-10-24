@@ -41,8 +41,7 @@ private:
 
 	Scene* curScene;
 
-	Scene* OnePlayerScn;
-	Scene* TwoPlayerScn;
+	Scene* GameScn;
 
 	bool wireframe = false;
 	bool w_pressed = false;
