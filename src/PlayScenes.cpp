@@ -126,6 +126,10 @@ void GameScene::LoadScene()
 	players[PLAYER_1]->Scale({ 0.75f,0.75f,0.75f });
 	players[PLAYER_1]->Move({ 0.0f, 0.3f, 0.0f });
 
+	players.push_back(new Object(TankM, defaultTex, sphereHB));
+	players[PLAYER_2]->Scale({ 0.75f,0.75f,0.75f });
+	players[PLAYER_2]->Move({ -2.0f, 0.3f, 0.0f });
+
 	Object* floor = new Object(Square, defaultTex, basicCubeHB);
 	floor->Move({ 0.0f, -0.75f, 0.0f });
 	floor->Scale({ 30.0f, 0.5f, 30.0f });
@@ -133,7 +137,7 @@ void GameScene::LoadScene()
 	terrain.push_back(floor);
 
 	Cam = {
-		new Camera(glm::vec3(0.0f, 15.0f, -1.0f), glm::vec3(0,0,0), glm::vec4(0,0, SCREEN_WIDTH, SCREEN_HEIGHT))
+		new Camera(glm::vec3(0.0f, 15.0f, 1.0f), glm::vec3(0,0,0), glm::vec4(0,0, SCREEN_WIDTH, SCREEN_HEIGHT))
 	};
 
 }
