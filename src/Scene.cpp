@@ -49,6 +49,14 @@ void PlayScene::KeyboardInput(GLFWwindow* window, glm::vec2 mousePos, int player
 	if (t.x != 0.0f || t.y != 0.0f || t.z != 0.0f) {
 	}
 
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && !p1_shoot) {
+		players[PLAYER_1]->Shoot(bullets);
+		p1_shoot = true;
+	}
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE) {
+		p1_shoot = false;
+	}
+
 	// PLAYER 2
 	glm::vec3 m = glm::vec3(0.0f, 0.0f, 0.0f);
 	if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
@@ -60,6 +68,14 @@ void PlayScene::KeyboardInput(GLFWwindow* window, glm::vec2 mousePos, int player
 	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
 	}
 	if (m.x != 0.0f || m.y != 0.0f || m.z != 0.0f) {
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS && !p2_shoot) {
+		players[PLAYER_2]->Shoot(bullets);
+		p2_shoot = true;
+	}
+	if (glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_RELEASE) {
+		p2_shoot = false;
 	}
 		
 }
@@ -102,6 +118,10 @@ void PlayScene::RenderScene(Shader* shader)
 {
 	for (int c = 0; c < players.size(); c++) {
 		players[c]->Draw(shader, Cam);
+	}
+
+	for (int c = 0; c < bullets.size(); c++) {
+		bullets[c]->Draw(shader, Cam);
 	}
 
 	for (int t = 0; t < terrain.size(); t++) {
