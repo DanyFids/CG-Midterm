@@ -109,14 +109,15 @@ void GameScene::LoadScene()
 	Material* D20Tex = new Material("d20-texture.png");
 	//Material* SwordTex = new Material("sword-texture.png", "sword-norm.png");
 	Material* defaultTex = new Material("default-texture.png", "default-texture.png");
+	defaultTex->shine = 512;
 
-	sun = new DirectionalLight(glm::normalize(glm::vec3(5.0f, 25.0f, 0.5f)), { 1.0f, 1.0f, 1.0f }, 0.1f, 0.2f, 0.2f);
+	sun = new DirectionalLight(glm::normalize(glm::vec3(5.0f, 25.0f, 0.5f)), { 1.0f, 1.0f, 1.0f }, 0.2f, 0.5f, 0.7f);
 	//lights.push_back(new PointLight({ 0.5f, 30.0f, 0.5f }, { 1.0f, 0.0f, 0.0f }, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, 0.3f, 0.5f, 1.0f, 0.014f, 0.0007f));
-	lights.push_back(new PointLight({ -4.0f, 3.0f, 4.0f }, { 1.0f, 1.0f, 1.0f }, 0.1f, 0.5f, 1.0f, 0.07f, 0.017f));
+	//lights.push_back(new PointLight({ -4.0f, 3.0f, 4.0f }, { 1.0f, 1.0f, 1.0f }, 0.1f, 0.5f, 1.0f, 0.07f, 0.017f));
 
 	Mesh* Square = new Mesh("d6.obj");
 	Mesh* d20 = new Mesh("d20.obj");
-	Mesh* TankM = new Mesh("SimpleTank.obj");
+	Mesh* TankM = new Mesh("Tank.obj");
 
 	Hitbox* basicCubeHB = new CubeHitbox(1.0f,1.0f,1.0f);
 	Hitbox* sphereHB = new SphereHitbox(1.0f);
@@ -132,7 +133,7 @@ void GameScene::LoadScene()
 	terrain.push_back(floor);
 
 	Cam = {
-		new Camera(glm::vec3(0.0f, 30.0f, -1.0f), glm::vec3(0,0,0), glm::vec4(0,0, SCREEN_WIDTH, SCREEN_HEIGHT))
+		new Camera(glm::vec3(0.0f, 15.0f, -1.0f), glm::vec3(0,0,0), glm::vec4(0,0, SCREEN_WIDTH, SCREEN_HEIGHT))
 	};
 
 }
