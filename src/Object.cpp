@@ -156,7 +156,7 @@ void Tank::Shoot(std::vector<Bullet*>& bul_list)
 		glm::vec3 dir;
 		dir.x = glm::cos(glm::radians(transform.rotation.y));
 		dir.y = 0.0f;
-		dir.z = glm::sin(glm::radians(transform.rotation.y));
+		dir.z = -glm::sin(glm::radians(transform.rotation.y));
 
 		glm::vec3 spawnPos = transform.position + dir * (1.0f);
 

@@ -165,9 +165,14 @@ void GameScene::LoadScene()
 	Object* bot_wall = new Object(Square, defaultTex, basicCubeHB);
 
 	top_wall->Move(glm::vec3(0.0f, 0.5f, 5.0f));
-	right_wall->Move(glm::vec3(5.0f, 0.5f, 0.0f));
-	left_wall->Move(glm::vec3(-5.0f, 0.5f, 0.0f));
+	right_wall->Move(glm::vec3(6.0f, 0.5f, 0.0f));
+	left_wall->Move(glm::vec3(-6.0f, 0.5f, 0.0f));
 	bot_wall->Move(glm::vec3(0.0f, 0.5f, -5.0f));
+
+	top_wall->Scale(glm::vec3(20.0f, 1.0f, 1.0f));
+	right_wall->Scale(glm::vec3(0.0f, 1.0f, 10.0f));
+	left_wall->Scale(glm::vec3(0.0f, 1.0f, 10.0f));
+	bot_wall->Scale(glm::vec3(20.0f, 1.0f, 1.0f));
 
 	terrain = {
 		floor,
