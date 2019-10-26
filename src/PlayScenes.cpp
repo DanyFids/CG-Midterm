@@ -107,6 +107,8 @@ void GameScene::LoadScene()
 
 	Material* DiceTex = new Material("dice-texture.png", "d6-normal.png");
 	Material* D20Tex = new Material("d20-texture.png");
+	Material* TankP1Tex = new Material("RedCamo.png");
+	Material* TankP2Tex = new Material("BlueCamo.png");
 	//Material* SwordTex = new Material("sword-texture.png", "sword-norm.png");
 	Material* defaultTex = new Material("default-texture.png", "default-texture.png");
 	defaultTex->shine = 512;
@@ -122,11 +124,11 @@ void GameScene::LoadScene()
 	Hitbox* basicCubeHB = new CubeHitbox(1.0f,1.0f,1.0f);
 	Hitbox* sphereHB = new SphereHitbox(1.0f);
 
-	players.push_back(new Object(TankM, defaultTex, sphereHB));
+	players.push_back(new Object(TankM, TankP1Tex, sphereHB));
 	players[PLAYER_1]->Scale({ 0.75f,0.75f,0.75f });
 	players[PLAYER_1]->Move({ 0.0f, 0.3f, 0.0f });
 
-	players.push_back(new Object(TankM, defaultTex, sphereHB));
+	players.push_back(new Object(TankM, TankP2Tex, sphereHB));
 	players[PLAYER_2]->Scale({ 0.75f,0.75f,0.75f });
 	players[PLAYER_2]->Move({ -2.0f, 0.3f, 0.0f });
 
