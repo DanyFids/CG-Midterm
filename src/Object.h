@@ -4,6 +4,8 @@
 #include<GLM/gtc/quaternion.hpp>
 #include<vector>
 
+#include"Constants.h"
+
 class Camera;
 class Material;
 class Mesh;
@@ -82,10 +84,11 @@ class Tank :public Object {
 	bool canShoot = true;
 public:
 	static Mesh* MESH;
-	static Material* MATERIAL;
+	static Material* P1_MAT;
+	static Material* P2_MAT;
 	static Hitbox* HITBOX;
 
-	Tank(glm::vec3 pos);
+	Tank(glm::vec3 pos, int player = PLAYER_1);
 
 	//virtual void Draw();
 	void ReadyToFire() { canShoot = true; }

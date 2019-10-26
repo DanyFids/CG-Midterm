@@ -144,7 +144,7 @@ bool Bullet::HitDetect(Object* other, float dt)
 		return false;
 }
 
-Tank::Tank(glm::vec3 pos):Object(MESH, MATERIAL, HITBOX, pos)
+Tank::Tank(glm::vec3 pos, int player):Object(MESH, (player == PLAYER_1)? P1_MAT : P2_MAT, HITBOX, pos)
 {
 }
 
@@ -170,7 +170,8 @@ bool Tank::HitDetect(Object* other, float dt)
 }
 
 Mesh* Tank::MESH = nullptr;
-Material* Tank::MATERIAL = nullptr;
+Material* Tank::P1_MAT = nullptr;
+Material* Tank::P2_MAT = nullptr;
 Hitbox* Tank::HITBOX = nullptr;
 
 Mesh* Bullet::MESH = nullptr;
