@@ -67,6 +67,14 @@ void PlayScene::KeyboardInput(GLFWwindow* window, glm::vec2 mousePos, int player
 	if (rotate)
 		players[PLAYER_1]->Rotate(rotation);
 
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && !p1_shoot) {
+		players[PLAYER_1]->Shoot(bullets);
+		p1_shoot = true;
+	}
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE) {
+		p1_shoot = false;
+	}
+
 	// PLAYER 2
 	glm::vec3 m = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 rotation2 = glm::vec3(0.0f);
@@ -104,6 +112,14 @@ void PlayScene::KeyboardInput(GLFWwindow* window, glm::vec2 mousePos, int player
 
 	rotate = false;
 	rotate2 = false;
+
+	if (glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS && !p2_shoot) {
+		players[PLAYER_2]->Shoot(bullets);
+		p2_shoot = true;
+	}
+	if (glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_RELEASE) {
+		p2_shoot = false;
+	}
 }
 
 void PlayScene::ControllerInput(unsigned int controller, int player, float dt)
@@ -144,6 +160,10 @@ void PlayScene::RenderScene(Shader* shader)
 {
 	for (int c = 0; c < players.size(); c++) {
 		players[c]->Draw(shader, Cam);
+	}
+
+	for (int c = 0; c < bullets.size(); c++) {
+		bullets[c]->Draw(shader, Cam);
 	}
 
 	for (int t = 0; t < terrain.size(); t++) {

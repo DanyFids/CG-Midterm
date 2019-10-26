@@ -4,6 +4,8 @@
 #include"Mesh.h"
 #include"Shader.h"
 #include"Texture.h"
+#include"Hitbox.h"
+#include"Lerp.h"
 
 Object::Object()
 {
@@ -79,3 +81,99 @@ void Object::Scale(glm::vec3 scl)
 {
 	transform.scale = scl;
 }
+
+const float Bullet::BULLET_SPEED = 10.0f;
+
+Bullet::Bullet(glm::vec3 pos, glm::vec3 d, Tank* p):Object(MESH, MATERIAL, HITBOX, pos)
+{
+	dir = d;
+	parent = p;
+}
+
+void Bullet::Die(std::vector<Bullet*> &bull_list)
+{
+	parent->ReadyToFire();
+
+	for (int c = 0; c < bull_list.size(); c++) {
+		if (this == bull_list.at(c)) {
+			bull_list.erase(bull_list.begin() + c);
+		}
+	}
+}
+
+void Bullet::Update(float dt)
+{
+	Move(dir * BULLET_SPEED * dt);
+}
+
+void Bullet::Bounce(Object* other)
+{
+	glm::vec3 n;
+
+
+	//n = glm::normalize(n);
+	//dir = dir - 2.0f*(glm::dot(dir, n)*n);
+	dir = -dir;
+	life--;
+}
+
+bool Bullet::Cull()
+{
+	return life <= 0;
+}
+
+bool Bullet::HitDetect(Object* other, float dt)
+{
+	Transform predict = transform;
+	predict.position += dir * BULLET_SPEED * dt;
+
+	if (other->hitbox->HitDetect(other->GetTransform(), (SphereHitbox*)this->hitbox, predict)) {
+		for (float t = 1.0f; t >= 0.0f; t -= 0.1f) {
+			Transform check = transform;
+			glm::vec3 move = lerp(dir*BULLET_SPEED*dt, glm::vec3(0.0f,0.0f,0.0f), t);
+
+			check.position += move;
+			if (!other->hitbox->HitDetect(other->GetTransform(), (SphereHitbox*)this->hitbox, predict)) {
+				dir = move / (BULLET_SPEED * dt);
+				break;
+			}
+		}
+		return true;
+	}
+	else
+		return false;
+}
+
+Tank::Tank(glm::vec3 pos, int player):Object(MESH, (player == PLAYER_1)? P1_MAT : P2_MAT, HITBOX, pos)
+{
+}
+
+void Tank::Shoot(std::vector<Bullet*>& bul_list)
+{
+	if (canShoot) {
+		canShoot = false;
+
+		glm::vec3 dir;
+		dir.x = glm::cos(glm::radians(transform.rotation.y));
+		dir.y = 0.0f;
+		dir.z = -glm::sin(glm::radians(transform.rotation.y));
+
+		glm::vec3 spawnPos = transform.position + dir * (1.0f);
+
+		bul_list.push_back(new Bullet(spawnPos, dir, this));
+	}
+}
+
+bool Tank::HitDetect(Object* other, float dt)
+{
+	return false;
+}
+
+Mesh* Tank::MESH = nullptr;
+Material* Tank::P1_MAT = nullptr;
+Material* Tank::P2_MAT = nullptr;
+Hitbox* Tank::HITBOX = nullptr;
+
+Mesh* Bullet::MESH = nullptr;
+Material* Bullet::MATERIAL = nullptr;
+Hitbox* Bullet::HITBOX = nullptr;

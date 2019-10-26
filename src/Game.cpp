@@ -215,14 +215,6 @@ void Game::InputHandle(float dt)
 	if (glfwGetKey(window, GLFW_KEY_F1) == GLFW_RELEASE)
 		w_pressed = false;
 
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !space_pressed) {
-		curScene->GetCams()[0]->TogglePerspective();
-		space_pressed = true;
-	}
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
-		space_pressed = false;
-	}
-
 	curScene->InputHandle(window, mousePos, dt);
 }
 

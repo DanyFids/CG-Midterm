@@ -14,7 +14,7 @@ struct Material{
 };
 
 struct DirLight{
-	vec3 dir;
+	vec3 position;
 
 	vec3 ambient;
 	vec3 diffuse;
@@ -46,27 +46,29 @@ void main()
 
 	//vec3 normVal = vec3(0.0);
 	//
-	vec3 norm = (normTex * 2) - 1; // reverses the normalization to RGB process
+	vec3 norm = normalize((normTex * 2) - 1); // reverses the normalization to RGB process
 	norm = normalize(vert_out.TBN * norm);
-	//
-	//// Ambient Light
-	//vec3 ambient = sun.ambient * objColor;
-	//
-	//// Diffuse Light
-	//
-	//float diff = max(dot(norm, sun.dir), 0.0);
-	//vec3 diffuse = sun.diffuse * diff * objColor;
-	//
-	//// Specular Light
-	//vec3 viewDir = normalize(viewPos - vert_out.fragPos);
-	//vec3 reflectDir = reflect(-sun.dir, norm);
-	//
-	//float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shine);
-	//vec3 specular = spec * sun.specular * specVal;
-	//
-	////FragColor = vec4(normalize(lightPos), 1.0);
-	//
-	//vec3 sunColor = ambient + diffuse + specular;
+	
+	vec3 sunDir = normalize(sun.position - vec3(0.0, 0.0, 0.0));
+
+	// Ambient Light
+	vec3 ambient = sun.ambient * objColor;
+	
+	// Diffuse Light
+	
+	float diff = max(dot(norm, sunDir), 0.0);
+	vec3 diffuse = sun.diffuse * diff * objColor;
+	
+	// Specular Light
+	vec3 viewDir = normalize(viewPos - vert_out.fragPos);
+	vec3 reflectDir = reflect(-sunDir, norm);
+	
+	float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shine);
+	vec3 specular = spec * sun.specular * specVal;
+	
+	//FragColor = vec4(normalize(lightPos), 1.0);
+	
+	vec3 sunColor = ambient + diffuse + specular;
 
 	// Point Lights
 	vec3 pointColor = vec3(0,0,0);
@@ -93,6 +95,6 @@ void main()
 		pointColor += (p_ambient + p_diffuse + p_specular) * attenuation;
 	}
 
-    FragColor = vec4((pointColor), 1.0);
+    FragColor = vec4((sunColor + pointColor), 1.0);
 	//FragColor = vec4(objColor, 1.0);
 }

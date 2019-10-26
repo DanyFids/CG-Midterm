@@ -8,6 +8,8 @@
 class Camera;
 class Shader;
 class Object;
+class Tank;
+class Bullet;
 class PointLight;
 class DirectionalLight;
 
@@ -78,12 +80,15 @@ public:
 
 class PlayScene : public Scene {
 protected:
-	std::vector<Object*> players;
+	std::vector<Tank*> players;
 	std::vector<Object*> terrain;
+	std::vector<Bullet*> bullets;
 	std::vector<Object*> score;
 
 	std::vector<PointLight*> lights;
 	DirectionalLight * sun;
+
+	bool p1_shoot = false, p2_shoot = false;
 
 public:
 	virtual void KeyboardInput(GLFWwindow* window, glm::vec2 mousePos, int player, float dt) override;

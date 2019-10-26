@@ -4,6 +4,8 @@
 #include<GLM/gtc/quaternion.hpp>
 #include<vector>
 
+#include"Constants.h"
+
 class Camera;
 class Material;
 class Mesh;
@@ -50,6 +52,46 @@ public:
 	void Move(glm::vec3 dir);
 	void Scale(glm::vec3 scl);
 
+	virtual bool HitDetect(Object* other, float dt) { return false; };
+
 	glm::vec3 GetPosition() { return transform.position; };
 	Transform GetTransform() { return transform; }
+};
+
+class Tank;
+
+class Bullet : public Object {
+	static const float BULLET_SPEED;
+
+	Tank* parent;
+	glm::vec3 dir;
+	int life = 3;
+public:
+	static Mesh* MESH;
+	static Material* MATERIAL;
+	static Hitbox* HITBOX;
+
+	Bullet(glm::vec3 pos, glm::vec3 d, Tank* p);
+
+	void Die(std::vector<Bullet*> &bul_list);
+	virtual void Update(float dt);
+	void Bounce(Object* other);
+	bool Cull();
+	virtual bool HitDetect(Object* other, float dt);
+};
+
+class Tank :public Object {
+	bool canShoot = true;
+public:
+	static Mesh* MESH;
+	static Material* P1_MAT;
+	static Material* P2_MAT;
+	static Hitbox* HITBOX;
+
+	Tank(glm::vec3 pos, int player = PLAYER_1);
+
+	//virtual void Draw();
+	void ReadyToFire() { canShoot = true; }
+	void Shoot(std::vector<Bullet*> &bul_list);
+	virtual bool HitDetect(Object* other, float dt);
 };
