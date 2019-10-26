@@ -120,19 +120,19 @@ void GameScene::Draw()
 
 void GameScene::LoadScene()
 {
-	shaderObj = new Shader("Shaders/Basic_Shader.vert", "Shaders/Basic_Shader.frag");
+	shaderObj = new Shader("Shaders/Basic_Shader - NM.vert", "Shaders/Basic_Shader - NM.frag");
 	depthShader = new Shader("Shaders/depth_shader.vert", "Shaders/depth_shader.frag", "Shaders/depthGeo.glsl");
 	sunShader = new Shader("Shaders/sunDepth.vert", "Shaders/sunDepth.frag");
 
 	Material* DiceTex = new Material("dice-texture.png", "d6-normal.png");
 	Material* D20Tex = new Material("d20-texture.png");
 	//Material* SwordTex = new Material("sword-texture.png", "sword-norm.png");
-	Material* defaultTex = new Material("default-texture.png", "default-texture.png");
+	Material* defaultTex = new Material("default-texture.png");
 	defaultTex->shine = 512;
 
-	sun = new DirectionalLight(glm::normalize(glm::vec3(5.0f, 25.0f, 0.5f)), { 1.0f, 1.0f, 1.0f }, 0.2f, 0.5f, 0.7f);
+	sun = new DirectionalLight(glm::normalize(glm::vec3(5.0f, 25.0f, 0.5f)), { 1.0f, 1.0f, 1.0f }, 0.2f, 0.3f, 0.4f);
 	//lights.push_back(new PointLight({ 0.5f, 30.0f, 0.5f }, { 1.0f, 0.0f, 0.0f }, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, 0.3f, 0.5f, 1.0f, 0.014f, 0.0007f));
-	//lights.push_back(new PointLight({ -4.0f, 3.0f, 4.0f }, { 1.0f, 1.0f, 1.0f }, 0.1f, 0.5f, 1.0f, 0.07f, 0.017f));
+	lights.push_back(new PointLight({ -4.0f, 3.0f, 4.0f }, { 1.0f, 1.0f, 1.0f }, 0.1f, 0.5f, 1.0f, 0.07f, 0.017f));
 
 	Mesh* Square = new Mesh("d6.obj");
 	Mesh* d20 = new Mesh("d20.obj");
@@ -157,7 +157,7 @@ void GameScene::LoadScene()
 
 	Object* floor = new Object(Square, defaultTex, basicCubeHB);
 	floor->Move({ 0.0f, -0.75f, 0.0f });
-	floor->Scale({ 30.0f, 0.5f, 30.0f });
+	floor->Scale({ 20.0f, 0.5f, 20.0f });
 
 	Object* top_wall = new Object(Square, defaultTex, basicCubeHB);
 	Object* right_wall = new Object(Square, defaultTex, basicCubeHB);
@@ -170,8 +170,8 @@ void GameScene::LoadScene()
 	bot_wall->Move(glm::vec3(0.0f, 0.5f, -5.0f));
 
 	top_wall->Scale(glm::vec3(20.0f, 1.0f, 1.0f));
-	right_wall->Scale(glm::vec3(0.0f, 1.0f, 10.0f));
-	left_wall->Scale(glm::vec3(0.0f, 1.0f, 10.0f));
+	right_wall->Scale(glm::vec3(1.0f, 1.0f, 10.0f));
+	left_wall->Scale(glm::vec3(1.0f, 1.0f, 10.0f));
 	bot_wall->Scale(glm::vec3(20.0f, 1.0f, 1.0f));
 
 	terrain = {

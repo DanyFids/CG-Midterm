@@ -16,17 +16,15 @@ uniform mat4 view;
 uniform mat4 project;
 uniform mat4 corr;
 
-uniform mat3 normMat;
-
 void main()
 {
     gl_Position = corr * project * view * model * vec4(aPos.x, aPos.y, aPos.z, 1.0);
 	vert_out.fragPos = vec3(model * vec4(aPos, 1.0)); 
 	vert_out.texCoord = iTexCoord;
 
-	vec3 t = normalize(normMat * aTan);
-	vec3 b = normalize(normMat * bTan);
-	vec3 n = normalize(normMat * aNorm);
+	vec3 t = normalize(vec3(model * vec4(aTan, 0.0)));
+	vec3 b = normalize(vec3(model * vec4(bTan, 0.0)));
+	vec3 n = normalize(vec3(model * vec4(aNorm, 0.0)));
 
 	vert_out.TBN = mat3(t,b,n);
 }

@@ -86,9 +86,9 @@ void PlayScene::KeyboardInput(GLFWwindow* window, glm::vec2 mousePos, int player
 
 	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
 		rotate2 = false;
-		m.x += glm::cos(glm::radians(players[PLAYER_2]->GetTransform().rotation.y));
+		m.x -= glm::cos(glm::radians(players[PLAYER_2]->GetTransform().rotation.y));
 		m.y = 0.0f;
-		m.z -= glm::sin(glm::radians(players[PLAYER_2]->GetTransform().rotation.y));
+		m.z += glm::sin(glm::radians(players[PLAYER_2]->GetTransform().rotation.y));
 	}	
 
 	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
