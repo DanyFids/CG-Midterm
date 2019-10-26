@@ -46,6 +46,8 @@ public:
 	virtual std::vector<Camera*> GetCams() { return Cam; }
 	bool rotate = false;
 	bool rotate2 = false;
+	bool p1Dead = false;
+	bool p2Dead = false;
 };
 
 class MenuItem {
@@ -81,6 +83,7 @@ protected:
 	std::vector<Tank*> players;
 	std::vector<Object*> terrain;
 	std::vector<Bullet*> bullets;
+	std::vector<Object*> score;
 
 	std::vector<PointLight*> lights;
 	DirectionalLight * sun;

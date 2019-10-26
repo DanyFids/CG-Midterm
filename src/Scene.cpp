@@ -35,6 +35,7 @@ void PlayScene::KeyboardInput(GLFWwindow* window, glm::vec2 mousePos, int player
 	// PLAYER 1
 	glm::vec3 t = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 rotation = glm::vec3(0.0f);
+
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 		rotate = false;
 		t.x += glm::cos(glm::radians(players[PLAYER_1]->GetTransform().rotation.y));
@@ -51,12 +52,12 @@ void PlayScene::KeyboardInput(GLFWwindow* window, glm::vec2 mousePos, int player
 
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
 		rotate = true;
-		rotation.y += 3 * PLAYER_SPEED * dt;
+		rotation.y += 20 * PLAYER_SPEED * dt;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
 		rotate = true;
-		rotation.y -= 3 * PLAYER_SPEED * dt;
+		rotation.y -= 20 * PLAYER_SPEED * dt;
 	}
 
 	if (t.x != 0.0f || t.y != 0.0f || t.z != 0.0f) {
@@ -93,12 +94,12 @@ void PlayScene::KeyboardInput(GLFWwindow* window, glm::vec2 mousePos, int player
 
 	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
 		rotate2 = true;
-		rotation2.y += 3 * PLAYER_SPEED * dt;
+		rotation2.y += 20 * PLAYER_SPEED * dt;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
 		rotate2 = true;
-		rotation2.y -= 3 * PLAYER_SPEED * dt;
+		rotation2.y -= 20 * PLAYER_SPEED * dt;
 	}
 
 	if (m.x != 0.0f || m.y != 0.0f || m.z != 0.0f) {

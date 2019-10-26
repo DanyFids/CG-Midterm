@@ -5,7 +5,7 @@ const int SCREEN_HEIGHT = 600;
 const int PLAYER_1 = 0;
 const int PLAYER_2 = 1;
 
-const float PLAYER_SPEED = 10.0f;
+const float PLAYER_SPEED = 4.0f;
 
 const float MOUSE_SENSITIVITY = 0.3f;
 
