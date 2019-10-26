@@ -101,7 +101,7 @@ void GameScene::Draw()
 
 void GameScene::LoadScene()
 {
-	shaderObj = new Shader("Shaders/Basic_Shader.vert", "Shaders/Basic_Shader.frag");
+	shaderObj = new Shader("Shaders/Basic_Shader - NM.vert", "Shaders/Basic_Shader - NM.frag");
 	depthShader = new Shader("Shaders/depth_shader.vert", "Shaders/depth_shader.frag", "Shaders/depthGeo.glsl");
 	sunShader = new Shader("Shaders/sunDepth.vert", "Shaders/sunDepth.frag");
 
@@ -109,6 +109,7 @@ void GameScene::LoadScene()
 	Material* D20Tex = new Material("d20-texture.png");
 	Material* TankP1Tex = new Material("RedCamo.png");
 	Material* TankP2Tex = new Material("BlueCamo.png");
+	Material* FloorTex = new Material("BattleTanks.png", "groundNM.png");
 	//Material* SwordTex = new Material("sword-texture.png", "sword-norm.png");
 	Material* defaultTex = new Material("default-texture.png", "default-texture.png");
 	defaultTex->shine = 512;
@@ -132,9 +133,9 @@ void GameScene::LoadScene()
 	players[PLAYER_2]->Scale({ 0.75f,0.75f,0.75f });
 	players[PLAYER_2]->Move({ -2.0f, 0.3f, 0.0f });
 
-	Object* floor = new Object(Square, defaultTex, basicCubeHB);
+	Object* floor = new Object(Square, FloorTex, basicCubeHB);
 	floor->Move({ 0.0f, -0.75f, 0.0f });
-	floor->Scale({ 30.0f, 0.5f, 30.0f });
+	floor->Scale({ 20.0f, 0.5f, 15.0f });
 
 	terrain.push_back(floor);
 
