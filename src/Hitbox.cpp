@@ -36,9 +36,9 @@ bool CubeHitbox::HitDetect(Transform t, SphereHitbox* other, Transform oT)
 		glm::max(t.position.z - ohd, glm::min(oT.position.z, t.position.z + ohd))
 	);
 
-	glm::vec3 dist = oT.position - closestPoint;
+	float distance = glm::distance(oT.position, closestPoint);
 
-	if (dist.length() < other->GetRadius())
+	if (distance < other->GetRadius())
 		return true;
 
 	return false;
@@ -65,9 +65,9 @@ bool SphereHitbox::HitDetect(Transform t, CubeHitbox* other, Transform oT)
 		glm::max(oT.position.z - ohd, glm::min(t.position.z, oT.position.z + ohd))
 	);
 
-	glm::vec3 dist = t.position - closestPoint;
+	float distance = glm::distance(t.position, closestPoint);
 	
-	if (dist.length() < radius)
+	if (distance < radius)
 		return true;
 
 	return false;
@@ -75,9 +75,10 @@ bool SphereHitbox::HitDetect(Transform t, CubeHitbox* other, Transform oT)
 
 bool SphereHitbox::HitDetect(Transform t, SphereHitbox* other, Transform oT)
 {
-	glm::vec3 dist = t.position - oT.position;
+	float distance = glm::distance(t.position, oT.position);
+	float maxDistance = radius * (t.scale.x + t.scale.y + t.scale.z) / 3 + other->GetRadius() * (oT.scale.x + oT.scale.y + oT.scale.z) / 3;
 	
-	if (dist.length() < radius * (t.scale.x + t.scale.y + t.scale.z) / 3 + other->GetRadius() * (oT.scale.x + oT.scale.y + oT.scale.z) / 3)
+	if (distance < maxDistance)
 		return true;
 	return false;
 }

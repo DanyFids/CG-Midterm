@@ -53,11 +53,55 @@ void GameScene::InputHandle(GLFWwindow* window, glm::vec2 mousePos, float dt)
 
 void GameScene::Update(float dt)
 {
+	for (int p = 0; p < players.size(); p++) {
+		players[p]->Update(dt);
+
+		for (int o = 0; o < players.size(); o++) {
+			if (players[p] != players[o])
+				players[p]->HitDetect(players[o], dt);
+		}
+
+		for (int t = 1; t < terrain.size(); t++) {
+			players[p]->HitDetect(terrain[t], dt);
+		}
+	}
+
 	for (int c = 0; c < bullets.size(); c++) {
+		bullets.at(c)->Update(dt);
+
+		if (bullets.at(c)->Cull()) {
+			bullets.at(c)->Die(bullets, lights);
+			c--;
+			continue;
+		}
+
+		bool kill = false;
 		for (int p = 0; p < players.size(); p++) {
-			if (bullets.at(c)->HitDetect(players.at(p), dt)) {
-				bullets.at(c)->Die(bullets);
+			if (players[p]->alive && bullets.at(c)->HitDetect(players.at(p), dt)) {
+				kill = true;
+				players[p]->alive = false;
+				endRound = true;
 			}
+		}
+
+		for (int b = 0; b < bullets.size(); b++) {
+			if(bullets[c] != bullets[b])
+				if (bullets[c]->HitDetect(bullets[b], dt)) {
+					kill = true;
+					bullets[b]->Die(bullets, lights);
+					if (c > b) {
+						c--;
+					}
+					break;
+				}
+		}
+
+		if (kill) {
+			bullets.at(c)->Die(bullets, lights);
+			c--;
+
+			if (bullets.size() <= 0) break;
+			else continue;
 		}
 
 		for (int t = 0; t < terrain.size(); t++) {
@@ -66,11 +110,17 @@ void GameScene::Update(float dt)
 			}
 		}
 
-		bullets.at(c)->Update(dt);
+		bullets.at(c)->ApplyMove();
+	}
 
-		if (bullets.at(c)->Cull()) {
-			bullets.at(c)->Die(bullets);
-		}
+	for (int p = 0; p < players.size(); p++) {
+		players[p]->ApplyMove();
+	}
+
+	if (endRound) {
+		endTimer -= dt;
+		if (endTimer <= 0.0f)
+			Reset();
 	}
 }
 
@@ -113,6 +163,10 @@ void GameScene::Draw()
 		Cam[c]->SetupCam(shaderObj);
 
 		RenderScene(shaderObj);
+
+		for (int c = 0; c < bullets.size(); c++) {
+			bullets[c]->Draw(shaderObj, Cam);
+		}
 	}
 
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -123,12 +177,14 @@ void GameScene::LoadScene()
 	shaderObj = new Shader("Shaders/Basic_Shader - NM.vert", "Shaders/Basic_Shader - NM.frag");
 	depthShader = new Shader("Shaders/depth_shader.vert", "Shaders/depth_shader.frag", "Shaders/depthGeo.glsl");
 	sunShader = new Shader("Shaders/sunDepth.vert", "Shaders/sunDepth.frag");
+	bulShader = new Shader("Shaders/bullet.vert", "Shaders/bullet.frag");
 
 	Material* DiceTex = new Material("dice-texture.png", "d6-normal.png");
 	Material* D20Tex = new Material("d20-texture.png");
 	Material* TankP1Tex = new Material("RedCamo.png");
 	Material* TankP2Tex = new Material("BlueCamo.png");
 	//Material* SwordTex = new Material("sword-texture.png", "sword-norm.png");
+	Material* bulletTex = new Material("yellow.png", "default-normal.png", "yellow.png");
 	Material* defaultTex = new Material("default-texture.png");
 	defaultTex->shine = 512;
 
@@ -138,12 +194,12 @@ void GameScene::LoadScene()
 
 	Mesh* Square = new Mesh("d6.obj");
 	Mesh* d20 = new Mesh("d20.obj");
-	Mesh* TankM = new Mesh("Tank.obj");
+	Mesh* TankM = new Mesh("Tank_c.obj");
 	Mesh* BulletM = new Mesh("Pellet.obj");
 
 	Hitbox* basicCubeHB = new CubeHitbox(1.0f,1.0f,1.0f);
-	Hitbox* sphereHB = new SphereHitbox(1.0f);
-	Hitbox* pelletHB = new SphereHitbox(0.3f);
+	Hitbox* sphereHB = new SphereHitbox(0.7f);
+	Hitbox* pelletHB = new SphereHitbox(0.05f);
 
 	Tank::MESH = TankM;
 	Tank::P1_MAT = TankP1Tex;
@@ -151,7 +207,7 @@ void GameScene::LoadScene()
 	Tank::HITBOX = sphereHB;
 
 	Bullet::MESH = BulletM;
-	Bullet::MATERIAL = defaultTex;
+	Bullet::MATERIAL = bulletTex;
 	Bullet::HITBOX = pelletHB;
 
 	players.push_back(new Tank({ 0.0f, 0.3f, 0.0f }));
@@ -170,9 +226,9 @@ void GameScene::LoadScene()
 	Object* bot_wall = new Object(Square, defaultTex, basicCubeHB);
 
 	top_wall->Move(glm::vec3(0.0f, 0.5f, 5.0f));
-	right_wall->Move(glm::vec3(6.0f, 0.5f, 0.0f));
-	left_wall->Move(glm::vec3(-6.0f, 0.5f, 0.0f));
-	bot_wall->Move(glm::vec3(0.0f, 0.5f, -5.0f));
+	right_wall->Move(glm::vec3(7.5f, 0.5f, -0.5f));
+	left_wall->Move(glm::vec3(-7.5f, 0.5f, -0.5f));
+	bot_wall->Move(glm::vec3(0.0f, 0.5f, -5.5f));
 
 	top_wall->Scale(glm::vec3(20.0f, 1.0f, 1.0f));
 	right_wall->Scale(glm::vec3(1.0f, 1.0f, 10.0f));
@@ -188,7 +244,30 @@ void GameScene::LoadScene()
 	};
 
 	Cam = {
-		new Camera(glm::vec3(0.0f, 15.0f, 1.0f), glm::vec3(0,0,0), glm::vec4(0,0, SCREEN_WIDTH, SCREEN_HEIGHT))
+		new Camera(glm::vec3(0.0f, 15.0f, -1.0f), glm::vec3(0,0,0), glm::vec4(0,0, SCREEN_WIDTH, SCREEN_HEIGHT))
 	};
 
+	this->Reset();
+}
+
+void GameScene::Reset()
+{
+	players[PLAYER_1]->SetPosition({ 3.0f, 0.0f, -0.5f });
+	players[PLAYER_2]->SetPosition({-3.0f, 0.0f, -0.5f});
+
+	players[PLAYER_1]->SetRotation({ 0.0f, 90.0f, 0.0f });
+	players[PLAYER_2]->SetRotation({ 0.0f,-90.0f,0.0f });
+
+	players[PLAYER_1]->alive = true;
+	players[PLAYER_2]->alive = true;
+
+	players[PLAYER_1]->ReadyToFire();
+	players[PLAYER_2]->ReadyToFire();
+
+	endRound = false;
+	endTimer = END_TIME;
+
+	while (bullets.size() > 0) {
+		bullets[0]->Die(bullets, lights);
+	}
 }

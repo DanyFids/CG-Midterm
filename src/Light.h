@@ -33,6 +33,8 @@ public:
 	void SetDiffuse(glm::vec3 color, float str);
 	void SetSpecular(glm::vec3 color, float str);
 
+	void Move(glm::vec3 dir) { position += dir; }
+
 	unsigned int GetFrameBuffer() { return depthMapFBO; };
 	unsigned int GetDepthMap() { return depthMap; }
 

@@ -91,6 +91,7 @@ protected:
 	bool p1_shoot = false, p2_shoot = false;
 
 public:
+	virtual void Reset() = 0;
 	virtual void KeyboardInput(GLFWwindow* window, glm::vec2 mousePos, int player, float dt) override;
 	virtual void ControllerInput(unsigned int controller, int player, float dt) override;
 	void RenderScene(Shader* shader);

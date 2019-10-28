@@ -38,16 +38,16 @@ void PlayScene::KeyboardInput(GLFWwindow* window, glm::vec2 mousePos, int player
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 		rotate = false;
-		t.x += glm::cos(glm::radians(players[PLAYER_1]->GetTransform().rotation.y));
+		t.x -= glm::sin(glm::radians(players[PLAYER_1]->GetTransform().rotation.y));
 		t.y = 0.0f;
-		t.z -= glm::sin(glm::radians(players[PLAYER_1]->GetTransform().rotation.y));
+		t.z -= glm::cos(glm::radians(players[PLAYER_1]->GetTransform().rotation.y));
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		rotate = false;
-		t.x -= glm::cos(glm::radians(players[PLAYER_1]->GetTransform().rotation.y));
+		t.x += glm::sin(glm::radians(players[PLAYER_1]->GetTransform().rotation.y));
 		t.y = 0.0f;
-		t.z += glm::sin(glm::radians(players[PLAYER_1]->GetTransform().rotation.y));
+		t.z += glm::cos(glm::radians(players[PLAYER_1]->GetTransform().rotation.y));
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
@@ -56,19 +56,23 @@ void PlayScene::KeyboardInput(GLFWwindow* window, glm::vec2 mousePos, int player
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-		rotate = true;
 		rotation.y -= 20 * PLAYER_SPEED * dt;
+		rotate = true;
 	}
 
 	if (t.x != 0.0f || t.y != 0.0f || t.z != 0.0f) {
 		if(!rotate)
-			players[PLAYER_1]->Move(t * PLAYER_SPEED * dt);
+			players[PLAYER_1]->phys.move = t * PLAYER_SPEED * dt;
 	}
 	if (rotate)
 		players[PLAYER_1]->Rotate(rotation);
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && !p1_shoot) {
-		players[PLAYER_1]->Shoot(bullets);
+		Bullet* newBul = players[PLAYER_1]->Shoot();
+		if (newBul != nullptr) {
+			bullets.push_back(newBul);
+			lights.push_back(newBul->GetGlow());
+		}
 		p1_shoot = true;
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE) {
@@ -80,16 +84,16 @@ void PlayScene::KeyboardInput(GLFWwindow* window, glm::vec2 mousePos, int player
 	glm::vec3 rotation2 = glm::vec3(0.0f);
 	if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
 		rotate2 = false;
-		m.x += glm::cos(glm::radians(players[PLAYER_2]->GetTransform().rotation.y));
+		m.x -= glm::sin(glm::radians(players[PLAYER_2]->GetTransform().rotation.y));
 		m.y = 0.0f;
-		m.z -= glm::sin(glm::radians(players[PLAYER_2]->GetTransform().rotation.y));
+		m.z -= glm::cos(glm::radians(players[PLAYER_2]->GetTransform().rotation.y));
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
 		rotate2 = false;
-		m.x -= glm::cos(glm::radians(players[PLAYER_2]->GetTransform().rotation.y));
+		m.x += glm::sin(glm::radians(players[PLAYER_2]->GetTransform().rotation.y));
 		m.y = 0.0f;
-		m.z += glm::sin(glm::radians(players[PLAYER_2]->GetTransform().rotation.y));
+		m.z += glm::cos(glm::radians(players[PLAYER_2]->GetTransform().rotation.y));
 	}	
 
 	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
@@ -104,7 +108,7 @@ void PlayScene::KeyboardInput(GLFWwindow* window, glm::vec2 mousePos, int player
 
 	if (m.x != 0.0f || m.y != 0.0f || m.z != 0.0f) {
 		if (!rotate2)
-			players[PLAYER_2]->Move(m * PLAYER_SPEED * dt);
+			players[PLAYER_2]->phys.move = m * PLAYER_SPEED * dt;
 	}
 
 	if (rotate2) 
@@ -114,7 +118,11 @@ void PlayScene::KeyboardInput(GLFWwindow* window, glm::vec2 mousePos, int player
 	rotate2 = false;
 
 	if (glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS && !p2_shoot) {
-		players[PLAYER_2]->Shoot(bullets);
+		Bullet* newBul = players[PLAYER_2]->Shoot();
+		if (newBul != nullptr) {
+			bullets.push_back(newBul);
+			lights.push_back(newBul->GetGlow());
+		}
 		p2_shoot = true;
 	}
 	if (glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_RELEASE) {
@@ -160,10 +168,6 @@ void PlayScene::RenderScene(Shader* shader)
 {
 	for (int c = 0; c < players.size(); c++) {
 		players[c]->Draw(shader, Cam);
-	}
-
-	for (int c = 0; c < bullets.size(); c++) {
-		bullets[c]->Draw(shader, Cam);
 	}
 
 	for (int t = 0; t < terrain.size(); t++) {
