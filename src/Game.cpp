@@ -27,7 +27,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 
 Game::Game() :
 	window(nullptr),
-	windowTitle("Glade-iators"),
+	windowTitle("Battle Tanks"),
 	myClearColor(glm::vec4(0.1f, 0.7f, 0.5f, 1.0f))
 { }
 
