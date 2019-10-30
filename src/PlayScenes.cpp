@@ -128,10 +128,11 @@ void GameScene::LoadScene()
 	Material* D20Tex = new Material("d20-texture.png");
 	Material* TankP1Tex = new Material("RedCamo.png");
 	Material* TankP2Tex = new Material("BlueCamo.png");
-	Material* FloorTex = new Material("BattleTanks.png", "groundNM.png");
+	Material* FloorTex = new Material("BattleTanks.png", "groundNM.png", "groundSM2.png");
 	//Material* SwordTex = new Material("sword-texture.png", "sword-norm.png");
 	Material* defaultTex = new Material("default-texture.png");
 	defaultTex->shine = 512;
+	//FloorTex->shine = 512;
 
 	sun = new DirectionalLight(glm::normalize(glm::vec3(5.0f, 25.0f, 0.5f)), { 1.0f, 1.0f, 1.0f }, 0.2f, 0.3f, 0.4f);
 	//lights.push_back(new PointLight({ 0.5f, 30.0f, 0.5f }, { 1.0f, 0.0f, 0.0f }, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, 0.3f, 0.5f, 1.0f, 0.014f, 0.0007f));
