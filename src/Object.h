@@ -57,7 +57,7 @@ public:
 	Object(Mesh* me, Material* ma, Hitbox* hb, glm::vec3 pos);
 
 	virtual void Update(float dt);
-	virtual void Draw(Shader* shader, std::vector<Camera*> cam);
+	virtual void Draw(Shader* shader);
 	void Rotate(glm::vec3 rot);
 	void Rotate(float tht, glm::vec3 dir);
 	void Move(glm::vec3 dir);
@@ -120,7 +120,7 @@ public:
 	Tank(glm::vec3 pos, int player = PLAYER_1);
 
 	virtual void Update(float dt);
-	virtual void Draw(Shader* shader, std::vector<Camera*> cam);
+	virtual void Draw(Shader* shader);
 	void ReadyToFire() { canShoot = true; }
 	Bullet* Shoot();
 	virtual bool HitDetect(Object* other, float dt);

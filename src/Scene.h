@@ -12,6 +12,7 @@ class Tank;
 class Bullet;
 class PointLight;
 class DirectionalLight;
+class UI;
 
 class SceneD {
 public:
@@ -84,6 +85,7 @@ protected:
 	std::vector<Object*> terrain;
 	std::vector<Bullet*> bullets;
 	std::vector<Object*> score;
+	std::vector<UI*> ui;
 
 	std::vector<PointLight*> lights;
 	DirectionalLight * sun;
@@ -95,4 +97,5 @@ public:
 	virtual void KeyboardInput(GLFWwindow* window, glm::vec2 mousePos, int player, float dt) override;
 	virtual void ControllerInput(unsigned int controller, int player, float dt) override;
 	void RenderScene(Shader* shader);
+	void DrawUI();
 };

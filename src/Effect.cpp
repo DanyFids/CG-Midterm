@@ -20,9 +20,10 @@ bool Effect::Cull()
 	return life <= 0.0f;
 }
 
-Explosion::Explosion(glm::vec3 pos): Effect(MESH, MATERIAL, HITBOX, pos, LIFETIME)
+Explosion::Explosion(glm::vec3 pos, std::vector<PointLight*>& l_list): Effect(MESH, MATERIAL, HITBOX, pos, LIFETIME)
 {
-	glow = new PointLight(pos, {}, 0.1f, 0.4f, 0.8f, L_START , Q_START);
+	glow = new PointLight(pos, {1.0f, 0.8f, 0.0f}, 0.1f, 0.4f, 0.8f, L_START , Q_START);
+	l_list.push_back(glow);
 }
 
 void Explosion::Update(float dt)
@@ -45,3 +46,15 @@ void Explosion::Die(std::vector<Effect*> &effect_list, std::vector<PointLight*> 
 
 	Effect::Die(effect_list);
 }
+
+Mesh* Explosion::MESH = nullptr;
+Material* Explosion::MATERIAL = nullptr;
+Hitbox* Explosion::HITBOX = nullptr;
+
+const float Explosion::LIFETIME = 0.3f;
+const float Explosion::L_START = 0.7f;
+const float Explosion::Q_START = 1.8f;
+const float Explosion::L_END = 0.35f;
+const float Explosion::Q_END = 0.44f;
+const float Explosion::SCALE_START = 0.5f;
+const float Explosion::SCALE_END = 3.0f;

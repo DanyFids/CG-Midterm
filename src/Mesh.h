@@ -26,7 +26,7 @@ public:
 	Mesh(const char* file);
 	~Mesh();
 
-	void Draw(Shader*, std::vector<Camera*>);
+	void Draw(Shader*);
 	void SetTexture(Material* t);
 	void Update(float dt);
 

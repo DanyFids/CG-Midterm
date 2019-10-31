@@ -54,6 +54,15 @@ void GameScene::InputHandle(GLFWwindow* window, glm::vec2 mousePos, float dt)
 
 void GameScene::Update(float dt)
 {
+	for (int e = 0; e < effects.size(); e++) {
+		if (effects[e]->Cull()) {
+			((Explosion*)effects[e])->Die(effects, lights);
+			e--;
+			continue;
+		}
+		effects[e]->Update(dt);
+	}
+
 	for (int p = 0; p < players.size(); p++) {
 		players[p]->Update(dt);
 
@@ -82,6 +91,7 @@ void GameScene::Update(float dt)
 				kill = true;
 				players[p]->alive = false;
 				endRound = true;
+				effects.push_back(new Explosion(players[p]->GetPosition(), lights));
 			}
 		}
 
@@ -167,9 +177,15 @@ void GameScene::Draw()
 
 		Cam[c]->SetupCam(bulShader);
 		for (int c = 0; c < bullets.size(); c++) {
-			bullets[c]->Draw(bulShader, Cam);
+			bullets[c]->Draw(bulShader);
+		}
+
+		for (int e = 0; e < effects.size(); e++) {
+			effects[e]->Draw(shaderObj);
 		}
 	}
+
+	DrawUI();
 
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
@@ -214,7 +230,10 @@ void GameScene::LoadScene()
 	Bullet::MATERIAL = bulletTex;
 	Bullet::HITBOX = pelletHB;
 
-	Explosion::MESH = ;
+	Explosion::MESH = new Mesh("SpikyBall.obj");
+	Explosion::MATERIAL = new Material("SpikyBallTex.png");
+	Explosion::HITBOX = sphereHB;
+
 
 	players.push_back(new Tank({ 0.0f, 0.3f, 0.0f }));
 	players[PLAYER_1]->Scale({0.75f, 0.75f, 0.75f});

@@ -119,7 +119,7 @@ Mesh::~Mesh()
 	
 }
 
-void Mesh::Draw(Shader* shader, std::vector<Camera*> cam)
+void Mesh::Draw(Shader* shader)
 {
 	glBindVertexArray(vao);
 

@@ -2,6 +2,7 @@
 #include "Scene.h"
 
 class Light;
+class Effect;
 
 class GameScene: public PlayScene {
 	Shader* shaderObj;
@@ -17,6 +18,8 @@ class GameScene: public PlayScene {
 
 	float endTimer = END_TIME;
 	bool endRound;
+
+	std::vector<Effect*> effects;
 public:
 	GameScene();
 

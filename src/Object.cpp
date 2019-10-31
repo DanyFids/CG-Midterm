@@ -45,7 +45,7 @@ void Object::Update(float dt)
 {
 }
 
-void Object::Draw(Shader* shader, std::vector<Camera*> cams)
+void Object::Draw(Shader* shader)
 {
 	shader->Use();
 	shader->SetI("material.diffuse", 0);
@@ -69,7 +69,7 @@ void Object::Draw(Shader* shader, std::vector<Camera*> cams)
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, material->SPEC);
 
-	mesh->Draw(shader, cams);
+	mesh->Draw(shader);
 }
 
 void Object::Rotate(glm::vec3 rot) {
@@ -213,10 +213,10 @@ void Tank::Update(float dt)
 	}
 }
 
-void Tank::Draw(Shader* shader, std::vector<Camera*> cam)
+void Tank::Draw(Shader* shader)
 {
 	if (alive) {
-		Object::Draw(shader, cam);
+		Object::Draw(shader);
 	}
 }
 
@@ -242,27 +242,29 @@ Bullet* Tank::Shoot()
 
 bool Tank::HitDetect(Object* other, float dt)
 {
-	Transform predict = transform;
-	predict.position += phys.move;
+	if (alive) {
+		Transform predict = transform;
+		predict.position += phys.move;
 
-	if (other->hitbox->HitDetect(other->GetTransform(), (SphereHitbox*)this->hitbox, predict)) {
+		if (other->hitbox->HitDetect(other->GetTransform(), (SphereHitbox*)this->hitbox, predict)) {
 
-		for (float t = 0.0f; t < 1.1f; t += 0.1f) {
-			t = glm::min(t, 1.0f);
-			Transform check = transform;
-			glm::vec3 move = lerp(phys.move, glm::vec3(0.0f, 0.0f, 0.0f), t);
+			for (float t = 0.0f; t < 1.1f; t += 0.1f) {
+				t = glm::min(t, 1.0f);
+				Transform check = transform;
+				glm::vec3 move = lerp(phys.move, glm::vec3(0.0f, 0.0f, 0.0f), t);
 
-			check.position += move;
-			if (!other->hitbox->HitDetect(other->GetTransform(), (SphereHitbox*)this->hitbox, check) || t >= 1.0f) {
-				phys.move = move;
-				break;
+				check.position += move;
+				if (!other->hitbox->HitDetect(other->GetTransform(), (SphereHitbox*)this->hitbox, check) || t >= 1.0f) {
+					phys.move = move;
+					break;
+				}
 			}
-		}
 
-		return true;
+			return true;
+		}	
 	}
-	else
-		return false;
+
+	return false;
 }
 
 Mesh* Tank::MESH = nullptr;
