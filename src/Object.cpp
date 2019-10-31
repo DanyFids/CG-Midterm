@@ -270,7 +270,7 @@ Material* Tank::P1_MAT = nullptr;
 Material* Tank::P2_MAT = nullptr;
 Hitbox* Tank::HITBOX = nullptr;
 const float Tank::ANIM_SEC = 0.1f;
-const float Tank::RECOIL_ANGLE = 15.0f;
+const float Tank::RECOIL_ANGLE = 10.0f;
 
 Mesh* Bullet::MESH = nullptr;
 Material* Bullet::MATERIAL = nullptr;

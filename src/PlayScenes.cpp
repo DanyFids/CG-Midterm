@@ -15,6 +15,7 @@
 #include"Constants.h"
 #include"Test_Primitives.h"
 #include"Hitbox.h"
+#include"Effect.h"
 
 
 GameScene::GameScene()
@@ -164,8 +165,9 @@ void GameScene::Draw()
 
 		RenderScene(shaderObj);
 
+		Cam[c]->SetupCam(bulShader);
 		for (int c = 0; c < bullets.size(); c++) {
-			bullets[c]->Draw(shaderObj, Cam);
+			bullets[c]->Draw(bulShader, Cam);
 		}
 	}
 
@@ -175,16 +177,16 @@ void GameScene::Draw()
 void GameScene::LoadScene()
 {
 	shaderObj = new Shader("Shaders/Basic_Shader - NM.vert", "Shaders/Basic_Shader - NM.frag");
+	bulShader = new Shader("Shaders/bullet.vert", "Shaders/bullet.frag");
 	depthShader = new Shader("Shaders/depth_shader.vert", "Shaders/depth_shader.frag", "Shaders/depthGeo.glsl");
 	sunShader = new Shader("Shaders/sunDepth.vert", "Shaders/sunDepth.frag");
-	bulShader = new Shader("Shaders/bullet.vert", "Shaders/bullet.frag");
 
 	Material* DiceTex = new Material("dice-texture.png", "d6-normal.png");
 	Material* D20Tex = new Material("d20-texture.png");
 	Material* TankP1Tex = new Material("RedCamo.png");
 	Material* TankP2Tex = new Material("BlueCamo.png");
 	//Material* SwordTex = new Material("sword-texture.png", "sword-norm.png");
-	Material* bulletTex = new Material("yellow.png", "default-normal.png", "yellow.png");
+	Material* bulletTex = new Material("yellow.png");
 	Material* defaultTex = new Material("default-texture.png");
 	defaultTex->shine = 512;
 
@@ -209,6 +211,8 @@ void GameScene::LoadScene()
 	Bullet::MESH = BulletM;
 	Bullet::MATERIAL = bulletTex;
 	Bullet::HITBOX = pelletHB;
+
+	Explosion::MESH = ;
 
 	players.push_back(new Tank({ 0.0f, 0.3f, 0.0f }));
 	players[PLAYER_1]->Scale({0.75f, 0.75f, 0.75f});

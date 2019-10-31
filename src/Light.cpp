@@ -263,3 +263,9 @@ void PointLight::SetupDepthShader(Shader* shader)
 	shader->SetVec3("lightPos", position);
 	shader->SetF("farPlane", far_plane);
 }
+
+void PointLight::SetIntensity(float l, float q)
+{
+	linear = l;
+	quadratic = q;
+}

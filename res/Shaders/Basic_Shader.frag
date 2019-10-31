@@ -80,7 +80,7 @@ float ShadowCalc(vec3 fragPos, int light_id){
 
 	float shadow;
 
-	shadow = (curDepth - shadow_bias) > 40.0 ? 1.0 : 0.0;
+	shadow = (curDepth - shadow_bias) > closestDepth ? 1.0 : 0.0;
 
 	return shadow;
 }

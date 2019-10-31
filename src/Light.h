@@ -70,4 +70,6 @@ public:
 	virtual void SetupLight(Shader* shader);
 	void SetupLight(Shader* shader, int num);
 	virtual void SetupDepthShader(Shader* shader);
+
+	void SetIntensity(float l, float q);
 };
