@@ -16,6 +16,7 @@
 #include"Test_Primitives.h"
 #include"Hitbox.h"
 #include"Effect.h"
+#include"UI.h"
 
 
 GameScene::GameScene()
@@ -92,6 +93,24 @@ void GameScene::Update(float dt)
 				players[p]->alive = false;
 				endRound = true;
 				effects.push_back(new Explosion(players[p]->GetPosition(), lights));
+				if (p == PLAYER_1) {
+					if (bluScore < 10) {
+						int posX = (bluScore < 5) ? bluScore : bluScore - 5;
+						int posY = (bluScore < 5) ? 0 : 1;
+
+						ui.push_back(new UI(25.0f, 25.0f, { 705 - 28*posX , 565 - 28*posY}, BluPointMat));
+						bluScore++;
+					}
+				}
+				else {
+					if (redScore < 10) {
+						int posX = (redScore < 5) ? redScore : redScore - 5;
+						int posY = (redScore < 5) ? 0 : 1;
+
+						ui.push_back(new UI(25.0f, 25.0f, { 70 + 28 * posX , 565 - 28 * posY }, RedPointMat));
+						redScore++;
+					}
+				}
 			}
 		}
 
@@ -196,6 +215,7 @@ void GameScene::LoadScene()
 	bulShader = new Shader("Shaders/bullet.vert", "Shaders/bullet.frag");
 	depthShader = new Shader("Shaders/depth_shader.vert", "Shaders/depth_shader.frag", "Shaders/depthGeo.glsl");
 	sunShader = new Shader("Shaders/sunDepth.vert", "Shaders/sunDepth.frag");
+	UI::SHADER = new Shader("Shaders/UI_shader.vert", "Shaders/UI_shader.frag");
 
 	Material* DiceTex = new Material("dice-texture.png", "d6-normal.png");
 	Material* D20Tex = new Material("d20-texture.png");
@@ -205,8 +225,14 @@ void GameScene::LoadScene()
 	//Material* SwordTex = new Material("sword-texture.png", "sword-norm.png");
 	Material* bulletTex = new Material("yellow.png");
 	Material* defaultTex = new Material("default-texture.png");
+	Material* buildingMa = new Material("BuildingTex.png");
 	defaultTex->shine = 512;
-	//FloorTex->shine = 512;
+
+	RedPointMat = new Material("RedPoint.png");
+	BluPointMat = new Material("BluPoint.png");
+
+	// UI Materials
+	Material* UI_back = new Material("black.png");
 
 	sun = new DirectionalLight(glm::normalize(glm::vec3(5.0f, 25.0f, 0.5f)), { 1.0f, 1.0f, 1.0f }, 0.2f, 0.3f, 0.4f);
 	//lights.push_back(new PointLight({ 0.5f, 30.0f, 0.5f }, { 1.0f, 0.0f, 0.0f }, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, 0.3f, 0.5f, 1.0f, 0.014f, 0.0007f));
@@ -216,10 +242,12 @@ void GameScene::LoadScene()
 	Mesh* d20 = new Mesh("d20.obj");
 	Mesh* TankM = new Mesh("Tank_c.obj");
 	Mesh* BulletM = new Mesh("Pellet.obj");
+	Mesh* BuildingMe = new Mesh("Building.obj");
 
 	Hitbox* basicCubeHB = new CubeHitbox(1.0f,1.0f,1.0f);
-	Hitbox* sphereHB = new SphereHitbox(0.7f);
+	Hitbox* sphereHB = new SphereHitbox(0.6f);
 	Hitbox* pelletHB = new SphereHitbox(0.05f);
+	Hitbox* buildingHB = new CubeHitbox(2.0f, 2.0f, 2.0f);
 
 	Tank::MESH = TankM;
 	Tank::P1_MAT = TankP1Tex;
@@ -234,7 +262,6 @@ void GameScene::LoadScene()
 	Explosion::MATERIAL = new Material("SpikyBallTex.png");
 	Explosion::HITBOX = sphereHB;
 
-
 	players.push_back(new Tank({ 0.0f, 0.3f, 0.0f }));
 	players[PLAYER_1]->Scale({0.75f, 0.75f, 0.75f});
 
@@ -244,32 +271,102 @@ void GameScene::LoadScene()
 	Object* floor = new Object(Square, FloorTex, basicCubeHB);
 	floor->Move({ 0.0f, -0.75f, 0.0f });
 	floor->Scale({ 20.0f, 0.5f, 20.0f });
+	floor->Rotate({ 0.0f,180.0f,0.0f });
 
 	Object* top_wall = new Object(Square, defaultTex, basicCubeHB);
 	Object* right_wall = new Object(Square, defaultTex, basicCubeHB);
 	Object* left_wall = new Object(Square, defaultTex, basicCubeHB);
 	Object* bot_wall = new Object(Square, defaultTex, basicCubeHB);
 
-	top_wall->Move(glm::vec3(0.0f, 0.5f, 5.0f));
+	top_wall->Move(glm::vec3(0.0f, 0.5f, 4.5f));
 	right_wall->Move(glm::vec3(7.5f, 0.5f, -0.5f));
 	left_wall->Move(glm::vec3(-7.5f, 0.5f, -0.5f));
-	bot_wall->Move(glm::vec3(0.0f, 0.5f, -5.5f));
+	bot_wall->Move(glm::vec3(0.0f, 0.5f, -6.0f));
 
 	top_wall->Scale(glm::vec3(20.0f, 1.0f, 1.0f));
 	right_wall->Scale(glm::vec3(1.0f, 1.0f, 10.0f));
 	left_wall->Scale(glm::vec3(1.0f, 1.0f, 10.0f));
 	bot_wall->Scale(glm::vec3(20.0f, 1.0f, 1.0f));
 
+	// Obstacles
+	Object* ob1 = new Object(BuildingMe, defaultTex, buildingHB);
+	Object* ob2 = new Object(BuildingMe, defaultTex, buildingHB);
+	Object* ob3 = new Object(BuildingMe, defaultTex, buildingHB);
+	Object* ob31 = new Object(BuildingMe, defaultTex, buildingHB);
+	Object* ob32 = new Object(BuildingMe, defaultTex, buildingHB);
+	Object* ob4 = new Object(BuildingMe, defaultTex, buildingHB);
+	Object* ob41 = new Object(BuildingMe, defaultTex, buildingHB);
+	Object* ob42 = new Object(BuildingMe, defaultTex, buildingHB);
+	Object* ob5 = new Object(BuildingMe, defaultTex, buildingHB);
+	Object* ob51 = new Object(BuildingMe, defaultTex, buildingHB);
+	Object* ob52 = new Object(BuildingMe, defaultTex, buildingHB);
+	Object* ob6 = new Object(BuildingMe, defaultTex, buildingHB);
+	Object* ob61 = new Object(BuildingMe, defaultTex, buildingHB);
+	Object* ob62 = new Object(BuildingMe, defaultTex, buildingHB);
+
+	ob1->Move({ 0.0f, 0.5f, -1.5f});
+	ob1->Scale({ 0.5, 0.5, 0.5 });
+	ob2->Move({ 0.0f, 0.5f, -0.5f });
+	ob2->Scale({ 0.5, 0.5, 0.5 });
+
+	ob3->Move({ -4.5f, 0.5f, 2.0f });
+	ob3->Scale({ 0.5, 0.5, 0.5 });
+	ob31->Move({ -3.5f, 0.5f, 2.0f });
+	ob31->Scale({ 0.5, 0.5, 0.5 });
+	ob32->Move({ -4.5f, 0.5f, 1.0f });
+	ob32->Scale({ 0.5, 0.5, 0.5 });
+
+	ob4->Move({ -4.5f, 0.5f, -3.5f });
+	ob4->Scale({ 0.5, 0.5, 0.5 });
+	ob41->Move({ -4.5f, 0.5f, -2.5f });
+	ob41->Scale({ 0.5, 0.5, 0.5 });
+	ob42->Move({ -3.5f, 0.5f, -3.5f });
+	ob42->Scale({ 0.5, 0.5, 0.5 });
+
+	ob5->Move({ 4.5f, 0.5f, 2.0f });
+	ob5->Scale({ 0.5, 0.5, 0.5 });
+	ob51->Move({ 3.5f, 0.5f, 2.0f });
+	ob51->Scale({ 0.5, 0.5, 0.5 });
+	ob52->Move({ 4.5f, 0.5f, 1.0f });
+	ob52->Scale({ 0.5, 0.5, 0.5 });
+
+	ob6->Move({ 4.5f, 0.5f, -3.5f });
+	ob6->Scale({ 0.5, 0.5, 0.5 });
+	ob61->Move({ 4.5f, 0.5f, -2.5f });
+	ob61->Scale({ 0.5, 0.5, 0.5 });
+	ob62->Move({ 3.5f, 0.5f, -3.5f });
+	ob62->Scale({ 0.5, 0.5, 0.5 });
+
 	terrain = {
 		floor,
 		top_wall,
 		right_wall,
 		left_wall,
-		bot_wall
+		bot_wall,
+		ob1,
+		ob2,
+		ob3,
+		ob31,
+		ob32,
+		ob4,
+		ob41,
+		ob42,
+		ob5,
+		ob51,
+		ob52,
+		ob6,
+		ob61,
+		ob62
 	};
 
 	Cam = {
 		new Camera(glm::vec3(0.0f, 15.0f, -1.0f), glm::vec3(0,0,0), glm::vec4(0,0, SCREEN_WIDTH, SCREEN_HEIGHT))
+	};
+
+	ui = {
+		new UI(800, 75, {0.0f, 525.0f}, UI_back),
+		new UI(50, 50, {10.0f, 535.0f}, new Material("RedTankIcon.png")),
+		new UI(50, 50, {740.0f, 535.0f}, new Material("BluTankIcon.png"))
 	};
 
 	this->Reset();
@@ -277,8 +374,8 @@ void GameScene::LoadScene()
 
 void GameScene::Reset()
 {
-	players[PLAYER_1]->SetPosition({ 3.0f, 0.0f, -0.5f });
-	players[PLAYER_2]->SetPosition({-3.0f, 0.0f, -0.5f});
+	players[PLAYER_1]->SetPosition({ 3.0f, 0.0f, -1.0f });
+	players[PLAYER_2]->SetPosition({-3.0f, 0.0f, -1.0f});
 
 	players[PLAYER_1]->SetRotation({ 0.0f, 90.0f, 0.0f });
 	players[PLAYER_2]->SetRotation({ 0.0f,-90.0f,0.0f });

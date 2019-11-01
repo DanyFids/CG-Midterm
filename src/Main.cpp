@@ -1,3 +1,16 @@
+//
+//	Intro to Computer Graphics Midterm - Take-home edition
+//	Writen by Daniel Findleton (100716573) and Maija Kinnunen (100697620)
+//
+//	Powered by Damnatio Studios' OpenGL engine.
+//	Damnatio Studios Team:
+//	- Daniel Findleton
+//	- Maija Kinnunen
+//	- Anthony Ona
+//	- Craig Holder
+//	- Dylan Brush
+//	- Tia Lee
+
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
 #include<iostream>

@@ -178,10 +178,12 @@ void PlayScene::RenderScene(Shader* shader)
 
 void PlayScene::DrawUI()
 {
+	glDisable(GL_DEPTH_TEST);
 	for each (UI* u in ui)
 	{
 		u->Draw(glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT));
 	}
+	glEnable(GL_DEPTH_TEST);
 }
 
 

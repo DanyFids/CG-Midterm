@@ -10,6 +10,7 @@
 #include"PlayScenes.h"
 #include "Camera.h"
 #include "Object.h"
+#include "UI.h"
 
 struct UpdateBehaviour {
 	std::function<void(entt::entity e, float dt)> Function;
@@ -99,6 +100,8 @@ void Game::Initialize()
 
 	std::cout << glGetString(GL_RENDERER) << std::endl;
 	std::cout << glGetString(GL_VERSION) << std::endl;
+
+	UI::INIT();
 
 	GameScn = new GameScene();
 

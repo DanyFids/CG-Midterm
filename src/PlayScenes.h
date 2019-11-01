@@ -3,12 +3,19 @@
 
 class Light;
 class Effect;
+class Material;
 
 class GameScene: public PlayScene {
 	Shader* shaderObj;
 	Shader* depthShader;
 	Shader* sunShader;
 	Shader* bulShader;
+
+	Material* RedPointMat;
+	Material* BluPointMat;
+
+	int redScore = 0;
+	int bluScore = 0;
 
 	bool debug = false;
 	bool f3_pressed;
